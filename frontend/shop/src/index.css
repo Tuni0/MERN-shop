@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body.light {
+  background-color: #ffffff;
+}
+
+body.dark {
+  background-color: #171717;
+}
+
+@font-face {
+  font-family: "abeezee";
+  src: url("../Roboto-Regular.ttf");
+}
