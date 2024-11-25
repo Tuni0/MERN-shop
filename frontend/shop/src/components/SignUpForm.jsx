@@ -12,6 +12,7 @@ function SignUpForm() {
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
   const [users, setUsers] = useState([]);
+  axios.defaults.withCredentials = true;
 
   const handleSumbit = (e) => {
     e.preventDefault();

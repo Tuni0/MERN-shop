@@ -32,7 +32,9 @@ function Contact() {
         <div className="flex flex-col pl-8 ">
           <div className=" mb-8 mt-12">
             <div className="flex flex-row">
-              <span className="pr-4">Made with love by Wiktor Mazepa </span>
+              <span className="pr-4 text-gray-900 dark:text-white ">
+                Made with love by Wiktor Mazepa{" "}
+              </span>
               <BsHeartFill className="text-2xl text-red-500" />
             </div>
             <div className="text-center pt-12">
@@ -63,8 +65,11 @@ function Contact() {
         </div>
         <div className="flex flex-row pr-96">
           {sections.map((section) => (
-            <div key={section.title} className="text-left px-12 m-4 space-y-4">
-              <a className="font-abeezee font-semibold text-xl text-left">
+            <div
+              key={section.title}
+              className="text-left px-12 m-4 space-y-4 text-gray-900 dark:text-white "
+            >
+              <a className=" font-semibold text-xl text-left">
                 {section.title}
               </a>
               {section.content.map((item, index) => (

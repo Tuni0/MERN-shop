@@ -102,8 +102,11 @@ app.post("/login", (req, res) => {
         const isPasswordValid = bcrypt.compareSync(password, user.password);
         if (isPasswordValid) {
           req.session.user = user.user_name;
+          req.session.userId = user.idusers; // Store user ID in session
           console.log("Session:", req.session.user);
-          return res.json({ Login: true });
+          console.log("UserId:", req.session.userId);
+
+          return res.json({ Login: true, username: user.user_name });
         } else {
           return res.send("Incorrect password");
         }
@@ -130,6 +133,103 @@ app.get("/products", (req, res) => {
     if (err) {
       console.log(err);
     } else {
+      return res.json(result);
+    }
+  });
+});
+
+app.get("/products/:number", (req, res) => {
+  const number = req.params.number;
+  const sqlSelect = `SELECT * FROM products WHERE idproducts = ? `;
+  db.query(sqlSelect, [number], (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send("Error fetching product");
+    } else {
+      return res.json(result);
+    }
+  });
+});
+
+app.post("/products/:number/basket", (req, res) => {
+  const number = req.params.number;
+  const selectedColor = req.body.selectedColor.name;
+  const selectedSize = req.body.selectedSize.name;
+
+  const sqlSelect = `SELECT * FROM products WHERE idproducts = ${number}`;
+  console.log("user:", req);
+  db.query(sqlSelect, [number], (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send("Error fetching product");
+    } else {
+      const sqlInsert = `INSERT INTO basket (user_id, product_id, quantity, date_add, color, size) VALUES (?, ?, ?, NOW(), ?, ?)`;
+      db.query(
+        sqlInsert,
+        [req.session.userId, number, 1, selectedColor, selectedSize],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).send("Error inserting values");
+          } else {
+            return res.json(result);
+          }
+        }
+      );
+    }
+  });
+});
+
+app.get("/basketItems", (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).send("Unauthorized");
+  }
+  const sqlSelect = `SELECT COUNT(*) as num FROM basket WHERE user_id = ${req.session.userId}`;
+  db.query(sqlSelect, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send("Error fetching basket items");
+    } else {
+      return res.json(result);
+    }
+  });
+});
+
+app.get("/checkout", isAuthenticated, (req, res) => {
+  const UserId = req.session.userId;
+  const sqlSelect = `SELECT 
+    basket.product_id, 
+    basket.user_id,
+    basket.color,
+    basket.size,
+    SUM(basket.quantity) as quantity, 
+    products.price, 
+    products.description, 
+    products.img_src
+FROM 
+    basket
+INNER JOIN 
+    products 
+ON 
+    products.idproducts = basket.product_id
+WHERE 
+    basket.user_id = ${UserId}
+GROUP BY 
+    basket.product_id, 
+    basket.user_id,
+    basket.color,
+    basket.size,
+    products.price, 
+    products.description, 
+    products.img_src;
+`;
+  db.query(sqlSelect, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send("Error fetching basket items");
+    } else {
+      console.log("Session:", req.session.user);
+      console.log("UserId:", req.session.userId);
       return res.json(result);
     }
   });

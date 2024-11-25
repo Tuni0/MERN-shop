@@ -43,7 +43,7 @@ function Login() {
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <MenuButton className="rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee flex flex-row">
-          Konto
+          {user ? "Logged In" : "Account"}
           <BsPersonFill aria-hidden="true" className="size-6 ml-4" />
           <ChevronDownIcon
             aria-hidden="true"
