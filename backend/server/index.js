@@ -124,6 +124,17 @@ app.post("/logout", (req, res) => {
   });
 });
 
+app.get("/products", (req, res) => {
+  const sqlSelect = "SELECT * FROM products";
+  db.query(sqlSelect, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      return res.json(result);
+    }
+  });
+});
+
 app.listen(3006, () => {
   console.log("Server running on port 3006");
 });

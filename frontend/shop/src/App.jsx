@@ -8,6 +8,7 @@ import "./App.css";
 import axios from "axios";
 import RouteGuard from "./components/RouteGuard.jsx";
 import Products from "./components/Products.jsx";
+import Contact from "./components/Contact.jsx";
 
 export const ThemeContext = createContext();
 export const UserLoginContext = createContext();
@@ -59,6 +60,9 @@ function App() {
                   <RouteGuard user={user}>
                     <Skills />
                   </RouteGuard>
+                  <Products />
+
+                  <Contact />
                 </>
               }
             />
