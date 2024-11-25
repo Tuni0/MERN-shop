@@ -3,10 +3,11 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import SignInForm from "./components/SignInForm.jsx";
 import SignUpForm from "./components/SignUpForm.jsx";
-import Skills from "./components/Skills.jsx";
+import Skills from "./components/Products.jsx";
 import "./App.css";
 import axios from "axios";
 import RouteGuard from "./components/RouteGuard.jsx";
+import Products from "./components/Products.jsx";
 
 export const ThemeContext = createContext();
 export const UserLoginContext = createContext();
@@ -48,6 +49,7 @@ function App() {
           <Routes>
             <Route path="/signin" exact element={<SignInForm />} />
             <Route path="/signup" exact element={<SignUpForm />} />
+            <Route path="/products" exact element={<Products />} />
             <Route
               path="/"
               exact
