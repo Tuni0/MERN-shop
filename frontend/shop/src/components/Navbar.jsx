@@ -1,12 +1,5 @@
-import React, {
-  useEffect,
-  useContext,
-  useState,
-  createContext,
-  useRef,
-} from "react";
-import { Link } from "react-scroll";
-import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
+import React, { useEffect, useContext, useState } from "react";
+import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import ThemeSwitcher from "./ThemeSwitcher.jsx";
 import { ThemeContext } from "../App.jsx";
@@ -27,10 +20,13 @@ function Navbar() {
   const navigate = useNavigate();
 
   const handleBasket = (e) => {
+    e.preventDefault();
     navigate("/basket");
   };
 
   const handleHome = (e) => {
+    e.preventDefault();
+
     navigate("/");
   };
 

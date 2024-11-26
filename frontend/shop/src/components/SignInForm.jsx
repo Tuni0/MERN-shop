@@ -1,14 +1,9 @@
-import { useContext } from "react";
-import { ThemeContext } from "../App.jsx";
-import { BsPersonFill } from "react-icons/bs";
-import { motion } from "framer-motion";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import { UserLoginContext } from "../App.jsx";
 
 function SignInForm() {
-  const { theme, toggleTheme } = useContext(ThemeContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

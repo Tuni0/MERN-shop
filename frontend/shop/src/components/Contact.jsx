@@ -1,7 +1,7 @@
 import { BsGithub } from "react-icons/bs";
 import { BsLinkedin } from "react-icons/bs";
-import { easeIn, motion } from "framer-motion";
 import { BsHeartFill } from "react-icons/bs";
+import React from "react";
 
 const sections = [
   {

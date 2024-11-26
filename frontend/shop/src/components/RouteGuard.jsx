@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const RouteGuard = ({ user, children }) => {
   return user ? (
@@ -9,6 +9,10 @@ const RouteGuard = ({ user, children }) => {
       <p>{/*Please register or login to your account to see data!!*/}</p>
     </div>
   );
+};
+RouteGuard.propTypes = {
+  user: PropTypes.string,
+  children: PropTypes.node.isRequired,
 };
 
 export default RouteGuard;

@@ -1,17 +1,11 @@
-import { useContext, useEffect } from "react";
-import { ThemeContext } from "../App.jsx";
-import { BsPersonFill } from "react-icons/bs";
-import { motion } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
+import React from "react";
 
 function SignUpForm() {
-  const { theme, toggleTheme } = useContext(ThemeContext);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
-  const [users, setUsers] = useState([]);
   axios.defaults.withCredentials = true;
 
   const handleSumbit = (e) => {

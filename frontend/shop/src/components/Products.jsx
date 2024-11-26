@@ -1,22 +1,19 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { useContext } from "react";
-import { ThemeContext } from "../App.jsx";
-import { color, motion } from "motion/react";
+import React, { useMemo, useEffect, useState, useContext } from "react";
+import { ThemeContext, UserLoginContext, BasketContext } from "../App.jsx";
 import axios from "axios";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { BsBasket2 } from "react-icons/bs";
-import { UserLoginContext } from "../App.jsx";
-import { BasketContext } from "../App.jsx";
+import LazyLoad from "react-lazyload";
 
 const colors = [
-  { name: "white", color: "White" },
-  { name: "black", color: "Black" },
-  { name: "grey", color: "Grey" },
-  { name: "blue", color: "Blue" },
-  { name: "green", color: "Green" },
-  { name: "red", color: "Red" },
-  { name: "yellow", color: "Yellow" },
-  { name: "purple", color: "Purple" },
+  { key: 1, color: "White" },
+  { key: 2, color: "Black" },
+  { key: 3, color: "Grey" },
+  { key: 4, color: "Blue" },
+  { key: 5, color: "Green" },
+  { key: 6, color: "Red" },
+  { key: 7, color: "Yellow" },
+  { key: 8, color: "Purple" },
 ];
 
 const sizes = [
@@ -30,30 +27,39 @@ const sizes = [
   { key: 8, size: "xxxl" },
 ];
 
-function Products() {
+const Products = () => {
   const { theme } = useContext(ThemeContext);
   const [products, setProducts] = useState([]);
   const { user } = useContext(UserLoginContext);
-  const { isBasket, setIsBasket } = useContext(BasketContext); // Use BasketContext
+  const { setIsBasket } = useContext(BasketContext); // Use BasketContext
 
-  const selectedColor = "white";
-  const selectedSize = "m";
+  const [selectedColor, setSelectedColor] = useState("white");
+  const [selectedSize, setSelectedSize] = useState("m");
 
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3006/products")
-      .then((result) => {
-        console.log(result.data);
-        if (JSON.stringify(result.data) !== JSON.stringify(products)) {
+    let isMounted = true; // flag to track if the component is mounted
+
+    const fetchProducts = async () => {
+      try {
+        const result = await axios.get("http://localhost:3006/products");
+        if (isMounted) {
           setProducts(result.data);
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         console.log("Error:", err);
-      });
-  }, []);
+      }
+    };
+
+    fetchProducts();
+
+    return () => {
+      isMounted = false; // cleanup function to set the flag to false
+    };
+  }, []); // Fetch products once on mount
+
+  const memoizedProducts = useMemo(() => products, [products]);
 
   const handleHeartClick = (id) => {
     console.log("Heart clicked for product with id:", id);
@@ -79,6 +85,14 @@ function Products() {
     }
   };
 
+  const handleColorChange = (color) => {
+    setSelectedColor(color);
+  };
+
+  const handleSizeChange = (size) => {
+    setSelectedSize(size);
+  };
+
   return (
     <div
       className={`bg-white dark:bg-neutral-900 ${
@@ -96,19 +110,20 @@ function Products() {
                 </legend>
                 <div className="mt-6 space-y-2">
                   {colors.map((color) => (
-                    <div key={color.name} className="relative flex gap-x-3 ">
+                    <div key={color.key} className="relative flex gap-x-3 ">
                       <div className="relative flex gap-x-3 items-center">
                         <input
-                          id={color.name}
-                          name={color.name}
+                          id={`color-${color.key}`}
+                          name="color"
                           type="checkbox"
                           className="size-4 rounded border-gray-300 text-violet-600 focus:ring-violet-600"
+                          onChange={() => handleColorChange(color.color)}
                         />
                       </div>
 
                       <div className="text-sm/6 ">
                         <label
-                          htmlFor={color.name}
+                          htmlFor={`color-${color.key}`}
                           className=" text-gray-500 dark:text-gray-200"
                         >
                           {color.color}
@@ -136,16 +151,17 @@ function Products() {
                     >
                       <div className="relative flex gap-x-3 ">
                         <input
-                          id={size.key}
-                          name={size.size}
+                          id={`size-${size.key}`}
+                          name="size"
                           type="checkbox"
                           className="size-4 rounded border-gray-300 text-violet-600 focus:ring-violet-600"
+                          onChange={() => handleSizeChange(size.size)}
                         />
                       </div>
 
                       <div className="text-sm/6 ">
                         <label
-                          htmlFor={size.size}
+                          htmlFor={`size-${size.key}`}
                           className=" text-gray-500 dark:text-gray-200"
                         >
                           {size.size}
@@ -155,22 +171,24 @@ function Products() {
                   ))}
                 </div>
               </fieldset>
-              <hr></hr>
+              <hr className="w-fit"></hr>
             </div>
           </div>
         </div>
 
         <div className="flex">
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 p-8">
-            {products.map((product) => (
+            {memoizedProducts.map((product) => (
               <div key={product.idproducts} className="group">
                 <div className="relative group">
                   <a href={`products/${product.idproducts}`}>
-                    <img
-                      alt={product.img_alt}
-                      src={product.img_src}
-                      className="z-0 relative aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
-                    />
+                    <LazyLoad>
+                      <img
+                        alt={product.img_alt}
+                        src={product.img_src}
+                        className="z-0 relative aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                      />
+                    </LazyLoad>
                   </a>
                   <button
                     className="absolute z-20 top-2 right-16 flex items-center justify-center bg-white rounded-full p-1 shadow-md hover:bg-gray-200"
@@ -227,5 +245,5 @@ function Products() {
       </div>
     </div>
   );
-}
+};
 export default Products;

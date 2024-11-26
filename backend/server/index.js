@@ -2,16 +2,18 @@ import express from "express";
 import { createConnection } from "mysql";
 import cors from "cors";
 import bcrypt from "bcrypt";
-import cookie from "cookie-parser";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
-import mysql from "mysql2";
 
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:3006", "http://localhost:5173"],
+    origin: [
+      "http://localhost:3006",
+      "http://localhost:5173",
+      "https://mern-shop-khaki.vercel.app",
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   })
@@ -29,11 +31,10 @@ app.use(
 app.use(bodyParser.json());
 
 const db = createConnection({
-  host: "34.88.211.198",
-  user: "tunio",
+  host: "localhost",
+  user: "newuser",
   password: "",
-  database: "shop-442823:europe-north1:shop",
-  port: 3306,
+  database: "shop",
 });
 
 const isAuthenticated = (req, res, next) => {
@@ -76,6 +77,7 @@ app.post("/signup", (req, res) => {
   db.query(sqlInsert, [user_name, email, hashedPassword], (err, result) => {
     if (err) {
       console.log(err);
+      console.log(result);
       if (err.sqlMessage.includes("Duplicate entry")) {
         return res
           .status(409)
@@ -163,6 +165,8 @@ app.post("/products/:number/basket", (req, res) => {
   db.query(sqlSelect, [number], (err, result) => {
     if (err) {
       console.log(err);
+      console.log(result);
+
       return res.status(500).send("Error fetching product");
     } else {
       const sqlInsert = `INSERT INTO basket (user_id, product_id, quantity, date_add, color, size) VALUES (?, ?, ?, NOW(), ?, ?)`;

@@ -1,11 +1,15 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { ThemeContext } from "../App.jsx";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { BsSunFill } from "react-icons/bs";
 import { motion } from "framer-motion";
 
 function ThemeSwitcher() {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme, setTheme } = useContext(ThemeContext);
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
 
   return (
     <div className="theme-switcher">

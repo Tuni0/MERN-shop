@@ -82,6 +82,7 @@ function Basket() {
                   </div>
                 </div>
                 <div className="flex items-center">
+                  <p className="font-medium mr-4">${item.quantity}</p>
                   <select
                     className="border-gray-300 rounded p-1"
                     value={item.quantity}

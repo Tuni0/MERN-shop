@@ -1,14 +1,12 @@
-import { useContext, useEffect } from "react";
-import { ThemeContext } from "../App.jsx";
+import { useContext } from "react";
 import { BsPersonFill } from "react-icons/bs";
-import { motion } from "framer-motion";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 import { UserLoginContext } from "../App.jsx";
+import React from "react";
 
 function Login() {
-  const { theme, toggleTheme } = useContext(ThemeContext);
   const { user } = useContext(UserLoginContext); // Ensure setUser is defined
   axios.defaults.withCredentials = true;
 
