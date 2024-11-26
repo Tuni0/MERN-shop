@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 const db = createConnection({
   host: "34.88.211.198",
   user: "tunio",
-  password: "EojaQG5tx9Dx67E@",
+  password: "",
   database: "shop-442823:europe-north1:shop",
   port: 3306,
 });
