@@ -3,7 +3,6 @@ import { ThemeContext, UserLoginContext, BasketContext } from "../App.jsx";
 import axios from "axios";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { BsBasket2 } from "react-icons/bs";
-import LazyLoad from "react-lazyload";
 
 const colors = [
   { key: 1, color: "White" },
@@ -182,13 +181,13 @@ const Products = () => {
               <div key={product.idproducts} className="group">
                 <div className="relative group">
                   <a href={`products/${product.idproducts}`}>
-                    <LazyLoad>
-                      <img
-                        alt={product.img_alt}
-                        src={product.img_src}
-                        className="z-0 relative aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
-                      />
-                    </LazyLoad>
+                    <img
+                      alt={product.img_alt}
+                      src={product.img_src}
+                      loading="lazy"
+                      className="z-0 relative aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                    />
+                    x{" "}
                   </a>
                   <button
                     className="absolute z-20 top-2 right-16 flex items-center justify-center bg-white rounded-full p-1 shadow-md hover:bg-gray-200"
