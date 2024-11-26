@@ -6,6 +6,7 @@ import cookie from "cookie-parser";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import mysql from "mysql2";
 
 const app = express();
 app.use(
@@ -28,10 +29,11 @@ app.use(
 app.use(bodyParser.json());
 
 const db = createConnection({
-  host: "localhost",
-  user: "newuser",
-  password: "",
-  database: "shop",
+  host: "34.88.211.198",
+  user: "tunio",
+  password: "EojaQG5tx9Dx67E@",
+  database: "shop-442823:europe-north1:shop",
+  port: 3306,
 });
 
 const isAuthenticated = (req, res, next) => {
