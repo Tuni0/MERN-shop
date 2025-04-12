@@ -11,6 +11,7 @@ import Products from "./components/Products.jsx";
 import Contact from "./components/Contact.jsx";
 import ItemPage from "./components/ItemPage.jsx";
 import Basket from "./components/Basket.jsx";
+import SwaggerDocs from "./components/SwaggerDocs.jsx";
 
 export const ThemeContext = createContext();
 export const UserLoginContext = createContext();
@@ -41,7 +42,7 @@ function App() {
           setUser(res.data.username);
           if (
             window.location.pathname === "/signin" ||
-            window.location.pathname === "/signup"
+            window.location.pathnasme === "/signup"
           ) {
             navigate("/");
           }
@@ -116,6 +117,7 @@ function App() {
                 }
               />
             </Routes>
+            <SwaggerDocs />
           </div>
         </BasketContext.Provider>
       </UserLoginContext.Provider>

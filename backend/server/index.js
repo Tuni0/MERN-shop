@@ -5,6 +5,8 @@ import bcrypt from "bcrypt";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import mysql from "mysql2/promise";
+import { Connector } from "@google-cloud/cloud-sql-connector";
 
 const app = express();
 app.use(
@@ -30,11 +32,26 @@ app.use(
 );
 app.use(bodyParser.json());
 
-const db = createConnection({
-  host: "localhost",
-  user: "newuser",
-  password: "",
+const connector = new Connector();
+const clientOpts = await connector.getOptions({
+  instanceConnectionName: "shop-442823:europe-north1:shop",
+  ipType: "PUBLIC",
+});
+const pool = await mysql.createPool({
+  ...clientOpts,
+  user: "tunio",
+  password: "U|k`&J`I_%d6.2.#",
   database: "shop",
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+const db = await pool.getConnection((err) => {
+  if (err) {
+    console.error("Database connection failed:", err.stack);
+    return;
+  }
+  console.log("Connected to Google Cloud SQL!");
 });
 
 const isAuthenticated = (req, res, next) => {
@@ -131,15 +148,14 @@ app.post("/logout", (req, res) => {
   });
 });
 
-app.get("/products", (req, res) => {
-  const sqlSelect = "SELECT * FROM products";
-  db.query(sqlSelect, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      return res.json(result);
-    }
-  });
+app.get("/products", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM products");
+    res.json(rows);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error fetching products");
+  }
 });
 
 app.get("/products/:number", (req, res) => {
