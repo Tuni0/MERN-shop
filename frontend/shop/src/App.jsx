@@ -95,7 +95,17 @@ function App() {
                 element={
                   <>
                     <Navbar />
-                    <Basket />{" "}
+                    <Basket />
+                  </>
+                }
+              />
+              <Route
+                path="/payment"
+                exact
+                element={
+                  <>
+                    <Navbar />
+                    <Payment />
                   </>
                 }
               />
