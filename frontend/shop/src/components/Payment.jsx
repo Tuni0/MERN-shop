@@ -1,20 +1,29 @@
-import {CheckoutProvider} from '@stripe/react-stripe-js';
+import {CheckoutProvider } from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
+import CheckoutForm from './CheckoutForm';
+
+import axios from "axios";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe('pk_test_51AROWSJX9HHJ5bycpEUP9dK39tXufyuWogSUdeweyZEXy3LC7M8yc5d9NlQ96fRCVL0BlAu7Nqt4V7N5xZjJnrkp005fDiTMIr');
+const stripePromise = loadStripe('pk_test_51RPhVtHCNzKlr0IWldDX2ZLLsX6BoTh7iLu4CMiJtG0bXEhtiJiLBJximbFY0C2b9D6gujO2p6LNdZDbi71VPBIR003ozScsLB');
 
 const fetchClientSecret = () => {
-  return fetch('/create-checkout-session', {method: 'POST'})
-    .then((response) => response.json())
-    .then((json) => json.checkoutSessionClientSecret)
+  axios.defaults.withCredentials = true;
+
+  return axios.post('https://localhost:3006/create-checkout-session')
+    .then((result) => 
+    {
+       console.log(result);
+
+       return result
+    })
 };
 
-export default function App() {
+export default function Payment() {
   return (
-    <CheckoutProvider stripe={stripePromise} options={{fetchClientSecret}}>
+    <CheckoutProvider   stripe={stripePromise}  options={{fetchClientSecret}}>
       <CheckoutForm />
-    </CheckoutProvider>
+    </CheckoutProvider >
   );
 }

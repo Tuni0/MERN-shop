@@ -12,6 +12,7 @@ import Contact from "./components/Contact.jsx";
 import ItemPage from "./components/ItemPage.jsx";
 import Basket from "./components/Basket.jsx";
 import SwaggerDocs from "./components/SwaggerDocs.jsx";
+import Payment from './components/Payment.jsx'
 
 export const ThemeContext = createContext();
 export const UserLoginContext = createContext();
@@ -127,7 +128,7 @@ function App() {
                 }
               />
             </Routes>
-            <SwaggerDocs />
+           <SwaggerDocs />
           </div>
         </BasketContext.Provider>
       </UserLoginContext.Provider>
