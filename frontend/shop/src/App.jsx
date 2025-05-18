@@ -129,7 +129,7 @@ function App() {
                 }
               />
             </Routes>
-           <SwaggerDocs />
+          {/*  <SwaggerDocs /> */}
           </div>
         </BasketContext.Provider>
       </UserLoginContext.Provider>
