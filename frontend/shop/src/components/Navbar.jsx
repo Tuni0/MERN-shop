@@ -6,7 +6,7 @@ import { ThemeContext } from "../App.jsx";
 import { BasketContext } from "../App.jsx"; // Import BasketContext
 import { motion } from "framer-motion";
 import Login from "./Login.jsx";
-import { BsBasket, BsHeart } from "react-icons/bs";
+import { BsBasket, BsHeart, BsCreditCard } from "react-icons/bs";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserLoginContext } from "../App.jsx";
@@ -29,6 +29,12 @@ function Navbar() {
     e.preventDefault();
 
     navigate("/");
+  };
+
+  const handlePayment = (e) => {
+    e.preventDefault();
+
+    navigate("/payment");
   };
 
   useEffect(() => {
@@ -114,6 +120,20 @@ function Navbar() {
               </div>
             </motion.button>
           </div>
+          <div className="hidden lg:flex  lg:justify-end pr-8 ">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              onClick={handlePayment}
+              className="block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee "
+            >
+              <div className="flex flex-row items-center">
+                <span className="pr-4">Payment </span>
+                <BsCreditCard className="text-xl " />
+              </div>
+            </motion.button>
+          </div>
           <div className="hidden lg:flex lg:justify-end ">
             <motion.button
               onClick={(e) => handleBasket(e)}
@@ -173,6 +193,20 @@ function Navbar() {
                       <BsHeart className="text-xl " />
                     </div>
                   </motion.button>
+
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    onClick={handlePayment}
+                    className="block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee "
+                  >
+                    <div className="flex flex-row items-center">
+                      <span className="pr-4">Payment </span>
+                      <BsCreditCard className="text-xl " />
+                    </div>
+                  </motion.button>
+
                   <motion.button
                     onClick={(e) => handleBasket(e)}
                     whileHover={{ scale: 1.1 }}
