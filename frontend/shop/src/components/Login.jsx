@@ -59,7 +59,7 @@ function Login() {
               <MenuItem>
                 <a
                   onClick={(e) => handleLogIn(e)}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none dark:text-white dark:hover:bg-zinc-800"
+                  className="cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none dark:text-white dark:hover:bg-zinc-800"
                 >
                   Log in
                 </a>
@@ -67,7 +67,7 @@ function Login() {
               <MenuItem>
                 <a
                   onClick={(e) => handleRegister(e)}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none dark:text-white dark:hover:bg-zinc-800"
+                  className="cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none dark:text-white dark:hover:bg-zinc-800"
                 >
                   Register
                 </a>
