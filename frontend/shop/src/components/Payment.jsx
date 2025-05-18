@@ -1,28 +1,25 @@
 import {CheckoutProvider } from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import CheckoutForm from './CheckoutForm';
+import {STRIPE_PUBLIC_KEY, API_URL} from '../settings'
 
 import axios from "axios";
 
+// Based on https://docs.stripe.com/payments/accept-a-payment?platform=web&ui=embedded-components&server-lang=java&client=react#create-checkout-session
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe('pk_test_51RPhVtHCNzKlr0IWldDX2ZLLsX6BoTh7iLu4CMiJtG0bXEhtiJiLBJximbFY0C2b9D6gujO2p6LNdZDbi71VPBIR003ozScsLB');
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
-const fetchClientSecret = () => {
+const fetchClientSecret = async () => {
   axios.defaults.withCredentials = true;
-
-  return axios.post('https://localhost:3006/create-checkout-session')
-    .then((result) => 
-    {
-       console.log(result);
-
-       return result
-    })
+  const {data} = await axios.post(`${API_URL}/create-checkout-session`);
+  
+  return data.checkoutSessionId;
 };
 
 export default function Payment() {
   return (
-    <CheckoutProvider   stripe={stripePromise}  options={{fetchClientSecret}}>
+    <CheckoutProvider stripe={stripePromise} options={{fetchClientSecret}}>
       <CheckoutForm />
     </CheckoutProvider >
   );

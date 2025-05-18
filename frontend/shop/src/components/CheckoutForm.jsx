@@ -1,10 +1,11 @@
 import {PaymentElement} from '@stripe/react-stripe-js';
+import PayButton from './PayButton';
 
 const CheckoutForm = () => {
   return (
     <form>
       <PaymentElement />
-      <button>Submit</button>
+      <PayButton/>
     </form>
   );
 };
