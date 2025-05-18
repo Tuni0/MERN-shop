@@ -36,7 +36,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3006/")
+      .get("https://localhost:3006/")
       .then((res) => {
         if (res.data.validUser) {
           setUser(res.data.username);

@@ -11,7 +11,13 @@ function SignUpForm() {
   const handleSumbit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3006/signup", { userName, email, password })
+      .post("https://localhost:8443/register", {
+        name: userName,
+        email: email,
+        password: password,
+        surname: "surname",
+        isAdmin: false,
+      })
       .then((result) => {
         console.log(result.data);
         console.log("TUTAJ:", result);

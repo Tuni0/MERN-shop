@@ -12,12 +12,12 @@ function SignInForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3006/login", { email, password })
+      .post("https://localhost:8443/login", { email, password })
       .then((result) => {
         console.log(result.data);
         if (result.data === "Incorrect password") {
           alert("Incorrect password or email");
-        } else if (result.data.Login === true) {
+        } else if (result.data.login === true) {
           window.location.pathname = "/";
         } else {
           alert("Login failed! Please contact support.");
