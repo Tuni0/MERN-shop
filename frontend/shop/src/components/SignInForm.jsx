@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
+import {API_URL} from '../settings'
+
 function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,7 +14,7 @@ function SignInForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios
-      .post("https://localhost:8443/login", { email, password })
+      .post(`${API_URL}/login`, { email, password })
       .then((result) => {
         console.log(result.data);
         if (result.data === "Incorrect password") {

@@ -10,6 +10,7 @@ import { BsBasket, BsHeart } from "react-icons/bs";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserLoginContext } from "../App.jsx";
+import {API_URL} from '../settings'
 
 function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,7 +42,7 @@ function Navbar() {
   useEffect(() => {
     if (user) {
       axios
-        .get("http://localhost:3006/basketItems")
+        .get(`${API_URL}/basketItems`)
         .then((result) => {
           console.log(result.data[0]);
           setNum(result.data[0].num);

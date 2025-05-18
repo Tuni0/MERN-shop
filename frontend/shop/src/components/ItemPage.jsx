@@ -4,6 +4,7 @@ import { BasketContext } from "../App.jsx"; // Import BasketContext
 import axios from "axios";
 import { StarIcon } from "@heroicons/react/24/outline";
 import { Radio, RadioGroup } from "@headlessui/react";
+import {API_URL} from '../settings'
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
@@ -42,7 +43,7 @@ function ItemPage() {
   useEffect(() => {
     const number = window.location.pathname.split("/")[2];
     axios
-      .get(`http://localhost:3006/products/${number}`)
+      .get(`${API_URL}/products/${number}`)
       .then((result) => {
         console.log(result.data[0]);
         setProducts(result.data[0]);
@@ -61,7 +62,7 @@ function ItemPage() {
       return;
     }
     axios
-      .post(`http://localhost:3006/products/${number}/basket`, {
+      .post(`${API_URL}/products/${number}/basket`, {
         selectedColor,
         selectedSize,
       })

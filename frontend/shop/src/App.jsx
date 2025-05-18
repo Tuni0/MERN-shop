@@ -13,6 +13,7 @@ import ItemPage from "./components/ItemPage.jsx";
 import Basket from "./components/Basket.jsx";
 import SwaggerDocs from "./components/SwaggerDocs.jsx";
 import Payment from './components/Payment.jsx'
+import {API_URL} from './settings'
 
 export const ThemeContext = createContext();
 export const UserLoginContext = createContext();
@@ -37,7 +38,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get("https://localhost:3006/")
+      .get(`${API_URL}/`)
       .then((res) => {
         if (res.data.validUser) {
           setUser(res.data.username);

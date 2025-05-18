@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import React from "react";
 
+import {API_URL} from '../settings'
+
 function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,7 +13,7 @@ function SignUpForm() {
   const handleSumbit = (e) => {
     e.preventDefault();
     axios
-      .post("https://localhost:8443/register", {
+      .post(`${API_URL}/register`, {
         name: userName,
         email: email,
         password: password,

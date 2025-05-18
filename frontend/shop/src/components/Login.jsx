@@ -5,6 +5,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 import { UserLoginContext } from "../App.jsx";
 import React from "react";
+import {API_URL} from '../settings'
 
 function Login() {
   const { user } = useContext(UserLoginContext); // Ensure setUser is defined
@@ -23,7 +24,7 @@ function Login() {
   const handleLogOut = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3006/logout")
+      .post(`${API_URL}/logout`)
       .then((result) => {
         console.log(result.data);
         if (result.data.Logout === true) {

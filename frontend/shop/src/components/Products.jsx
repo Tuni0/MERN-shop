@@ -3,6 +3,7 @@ import { ThemeContext, UserLoginContext, BasketContext } from "../App.jsx";
 import axios from "axios";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { BsBasket2 } from "react-icons/bs";
+import {API_URL} from '../settings'
 
 const colors = [
   { key: 1, color: "White" },
@@ -42,7 +43,7 @@ const Products = () => {
 
     const fetchProducts = async () => {
       try {
-        const result = await axios.get("http://localhost:3006/products");
+        const result = await axios.get(`${API_URL}/products`);
         if (isMounted) {
           setProducts(result.data);
         }
@@ -70,7 +71,7 @@ const Products = () => {
       return;
     } else {
       axios
-        .post(`http://localhost:3006/products/${id}/basket`, {
+        .post(`${API_URL}/products/${id}/basket`, {
           selectedColor,
           selectedSize,
         })

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { UserLoginContext } from "../App";
+import {API_URL} from '../settings'
 
 function Basket() {
   const [items, setItems] = useState([]);
@@ -13,7 +14,7 @@ function Basket() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3006/checkout")
+      .get(`${API_URL}/checkout`)
       .then((result) => {
         console.log(result.data[0]);
         setItems(result.data);
