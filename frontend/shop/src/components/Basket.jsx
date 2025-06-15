@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { UserLoginContext } from "../App";
-import {API_URL} from '../settings'
+import { API_URL, STRIPE_PUBLIC_KEY } from "../settings";
+import { loadStripe } from "@stripe/stripe-js";
 
 function Basket() {
   const [items, setItems] = useState([]);
@@ -14,9 +15,9 @@ function Basket() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/checkout`)
+      .get(`${API_URL}/basketItems`)
       .then((result) => {
-        console.log(result.data[0]);
+        console.log(result.data);
         setItems(result.data);
         calculateSubtotal(result.data);
       })
@@ -26,11 +27,10 @@ function Basket() {
   }, []);
 
   const calculateSubtotal = (items) => {
-    if (!user) {
-      return;
-    }
+    if (!user) return;
     const subtotal = items.reduce(
-      (total, item) => total + (item.price * item.quantity || 0),
+      (total, item) =>
+        total + (item.product?.price ?? 0) * (item.quantity ?? 1),
       0
     );
     setSubtotal(subtotal);
@@ -39,10 +39,22 @@ function Basket() {
   const handleOnChange = (e, itemId) => {
     const newQuantity = parseInt(e.target.value);
     const updatedItems = items.map((item) =>
-      item.idbasket === itemId ? { ...item, quantity: newQuantity } : item
+      item.id === itemId ? { ...item, quantity: newQuantity } : item
     );
     setItems(updatedItems);
     calculateSubtotal(updatedItems);
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const res = await axios.post(`${API_URL}/create-checkout-session`);
+      const stripe = await loadStripe(STRIPE_PUBLIC_KEY);
+      await stripe.redirectToCheckout({
+        sessionId: res.data.checkoutSessionId,
+      });
+    } catch (err) {
+      console.error("Stripe error", err);
+    }
   };
 
   return (
@@ -54,49 +66,43 @@ function Basket() {
             {!user && <p>Please log in and add items to basket to see</p>}
             {items.map((item) => (
               <div
-                key={item.idbasket}
+                key={item.id}
                 className="flex items-center justify-between border-b border-gray-200 pb-4 mb-4"
               >
                 <div className="flex items-center">
                   <img
-                    src={item.img_src}
-                    alt={item.img_alt}
-                    className="w-20 h-20 rounded-lg"
+                    src={item.product?.imgSrc}
+                    alt={item.product?.name}
+                    className="w-20 h-20 rounded-lg object-cover border"
                   />
                   <div className="ml-4">
-                    <h2 className="font-medium">{item.description}</h2>
+                    <h2 className="font-medium">{item.product?.description}</h2>
                     <p className="text-sm text-gray-500 text-left">
                       {item.color}
                     </p>
                     <p className="text-sm text-gray-500 text-left">
                       {item.size}
                     </p>
-                    <p
-                      className={`text-sm mt-1 ${
-                        item.stockStatus === "In stock"
-                          ? "text-green-500"
-                          : "text-yellow-500"
-                      }`}
-                    >
-                      {item.stockStatus}
-                    </p>
+                    <p className="text-sm mt-1 text-green-500">In stock</p>
                   </div>
                 </div>
                 <div className="flex items-center">
                   <p className="font-medium mr-4">${item.quantity}</p>
                   <select
                     className="border-gray-300 rounded p-1"
-                    value={item.quantity}
-                    onChange={(e) => handleOnChange(e, item.idbasket)}
+                    value={item.quantity ?? 1}
+                    onChange={(e) => handleOnChange(e, item.id)}
                   >
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                    {[1, 2, 3].map((n) => (
+                      <option key={n} value={n}>
+                        {n}
+                      </option>
+                    ))}
                   </select>
                   <p className="ml-4 font-medium">
                     $
-                    {item.price
-                      ? (item.price * item.quantity).toFixed(2)
+                    {item.product?.price
+                      ? (item.product.price * (item.quantity ?? 1)).toFixed(2)
                       : "0.00"}
                   </p>
                 </div>
@@ -106,7 +112,7 @@ function Basket() {
 
           <div className="lg:col-span-4 bg-white p-6 rounded-lg shadow h-fit">
             <h2 className="text-lg font-medium mb-4">Order Summary</h2>
-            {user && (
+            {user ? (
               <>
                 <div className="flex justify-between text-sm mb-2">
                   <p>Subtotal</p>
@@ -125,8 +131,7 @@ function Basket() {
                   <p>${total.toFixed(2)}</p>
                 </div>
               </>
-            )}
-            {!user && (
+            ) : (
               <>
                 <div className="flex justify-between text-sm mb-2">
                   <p>Subtotal</p>
@@ -146,7 +151,10 @@ function Basket() {
                 </div>
               </>
             )}
-            <button className="mt-6 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-500">
+            <button
+              onClick={handleCheckout}
+              className="mt-6 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-500"
+            >
               Checkout
             </button>
           </div>

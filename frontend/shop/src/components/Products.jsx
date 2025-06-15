@@ -3,7 +3,8 @@ import { ThemeContext, UserLoginContext, BasketContext } from "../App.jsx";
 import axios from "axios";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { BsBasket2 } from "react-icons/bs";
-import {API_URL} from '../settings'
+import { API_URL } from "../settings";
+import { Link } from "react-router-dom";
 
 const colors = [
   { key: 1, color: "White" },
@@ -43,7 +44,9 @@ const Products = () => {
 
     const fetchProducts = async () => {
       try {
-        const result = await axios.get(`${API_URL}/products`);
+        const result = await axios.get("https://localhost:8443/products");
+        console.log("Fetched products:", result.data); // 👈 dodaj to
+
         if (isMounted) {
           setProducts(result.data);
         }
@@ -62,27 +65,61 @@ const Products = () => {
   const memoizedProducts = useMemo(() => products, [products]);
 
   const handleHeartClick = (id) => {
-    console.log("Heart clicked for product with id:", id);
+    if (!user) {
+      alert("Please log in to add favourites.");
+      return;
+    }
+
+    axios
+      .post(
+        `${API_URL}/products/${id}/favourite`,
+        {},
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log("Added to favourites:", res.data);
+        // Tu możesz ustawić np. animację, ikonę wypełnioną itp.
+      })
+      .catch((err) => {
+        console.error("Favourite add failed:", err);
+        if (err.response?.status === 401) {
+          alert("Session expired. Please log in again.");
+        }
+      });
   };
+
   const handleBasketClick = (e, id) => {
     e.preventDefault();
+
     if (!user) {
       alert("Please log in to add items to the basket!");
       return;
-    } else {
-      axios
-        .post(`${API_URL}/products/${id}/basket`, {
-          selectedColor,
-          selectedSize,
-        })
-        .then((result) => {
-          console.log(result.data[0]);
-          setIsBasket(true);
-        })
-        .catch((err) => {
-          console.log("Error:", err);
-        });
     }
+
+    axios
+      .post(
+        `${API_URL}/products/${id}/basket`,
+        {
+          color: selectedColor,
+          size: selectedSize,
+        },
+        {
+          withCredentials: true, // ⬅️ WAŻNE dla sesji Springa
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log("Added to basket:", res.data);
+        setIsBasket(true);
+      })
+      .catch((err) => {
+        console.error("Basket add failed:", err);
+        if (err.response?.status === 401) {
+          alert("Session expired. Please log in again.");
+        }
+      });
   };
 
   const handleColorChange = (color) => {
@@ -99,9 +136,9 @@ const Products = () => {
         theme === "dark" ? "dark" : ""
       } `}
     >
-      <div className="mx-auto  px-4 py-16 sm:px-6 sm:py-24  lg:px-8 flex w-full ">
+      <div className="mx-auto px-4 py-16 sm:px-6 sm:py-24  lg:px-8 flex w-full ">
         <h2 className="sr-only">Products</h2>
-        <div className="flex flex-1 flex-col ">
+        <div className="w-1/8 flex-shrink-0">
           <div className="">
             <div className="mt-10 space-y-10">
               <fieldset className=" pr-8">
@@ -110,7 +147,10 @@ const Products = () => {
                 </legend>
                 <div className="mt-6 space-y-2">
                   {colors.map((color) => (
-                    <div key={color.key} className="relative flex gap-x-3 ">
+                    <div
+                      key={`color-${color.key}`}
+                      className="relative flex gap-x-3"
+                    >
                       <div className="relative flex gap-x-3 items-center">
                         <input
                           id={`color-${color.key}`}
@@ -146,7 +186,7 @@ const Products = () => {
                 <div className="mt-6 space-y-2">
                   {sizes.map((size) => (
                     <div
-                      key={size.key}
+                      key={`size-${size.key}`}
                       className="relative flex gap-x-3 items-center"
                     >
                       <div className="relative flex gap-x-3 ">
@@ -171,27 +211,40 @@ const Products = () => {
                   ))}
                 </div>
               </fieldset>
-              <hr className="w-fit"></hr>
+              <hr className="border-t border-gray-300 dark:border-gray-600" />
             </div>
           </div>
         </div>
 
-        <div className="flex">
+        <div className="flex-1">
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 p-8">
-            {memoizedProducts.map((product) => (
-              <div key={product.idproducts} className="group">
+            {memoizedProducts.map((product, index) => (
+              <div
+                key={product.idproducts ?? `fallback-${index}`}
+                className="group"
+              >
                 <div className="relative group">
-                  <a href={`products/${product.idproducts}`}>
+                  <Link to={`/products/${product.id}`}>
                     <img
-                      alt={product.img_alt}
-                      src={product.img_src}
-                      loading="lazy"
+                      alt={product.imgAlt}
+                      src={
+                        product.imgSrc?.includes("github.com")
+                          ? product.imgSrc
+                              .replace(
+                                "https://github.com/",
+                                "https://raw.githubusercontent.com/"
+                              )
+                              .replace("/blob/", "/")
+                              .split("?")[0] // usuwa ?raw=true
+                          : product.imgSrc
+                      }
                       className="z-0 relative aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
                     />
-                  </a>
+                  </Link>
+
                   <button
                     className="absolute z-20 top-2 right-16 flex items-center justify-center bg-white rounded-full p-1 shadow-md hover:bg-gray-200"
-                    onClick={() => handleHeartClick(product.idproducts)}
+                    onClick={() => handleHeartClick(product.id)}
                     onMouseEnter={(e) =>
                       e.currentTarget.parentElement.classList.remove(
                         "group-hover:opacity-75"
@@ -210,7 +263,7 @@ const Products = () => {
                   </button>
                   <button
                     className="absolute z-20 top-2 right-2 flex items-center justify-center bg-white rounded-full p-1 shadow-md hover:bg-gray-200"
-                    onClick={(e) => handleBasketClick(e, product.idproducts)}
+                    onClick={(e) => handleBasketClick(e, product.id)}
                     onMouseEnter={(e) =>
                       e.currentTarget.parentElement.classList.remove(
                         "group-hover:opacity-75"
@@ -245,4 +298,5 @@ const Products = () => {
     </div>
   );
 };
+
 export default Products;

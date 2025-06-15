@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
-import {API_URL} from '../settings'
+import { API_URL } from "../settings";
 
 function SignInForm() {
   const [email, setEmail] = useState("");
@@ -14,12 +14,23 @@ function SignInForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios
-      .post(`${API_URL}/login`, { email, password })
+      .post(
+        `${API_URL}/login`,
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // jeśli backend używa sesji/cookies
+        }
+      )
+
       .then((result) => {
         console.log(result.data);
         if (result.data === "Incorrect password") {
           alert("Incorrect password or email");
         } else if (result.data.login === true) {
+          localStorage.setItem("user", JSON.stringify(result.data)); // zapisanie sesji
           window.location.pathname = "/";
         } else {
           alert("Login failed! Please contact support.");

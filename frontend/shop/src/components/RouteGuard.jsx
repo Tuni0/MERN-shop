@@ -10,9 +10,10 @@ const RouteGuard = ({ user, children }) => {
     </div>
   );
 };
+
 RouteGuard.propTypes = {
-  user: PropTypes.string,
-  children: PropTypes.node.isRequired,
+  user: PropTypes.object,
+  children: PropTypes.node,
 };
 
 export default RouteGuard;

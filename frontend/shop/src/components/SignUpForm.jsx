@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import React from "react";
 
-import {API_URL} from '../settings'
+import { API_URL } from "../settings";
 
 function SignUpForm() {
   const [email, setEmail] = useState("");
@@ -23,7 +23,7 @@ function SignUpForm() {
       .then((result) => {
         console.log(result.data);
         console.log("TUTAJ:", result);
-        if (result.data === "Values inserted") {
+        if (result.status === 201) {
           console.log("Signup Success");
           alert("Signup successful!");
         } else {

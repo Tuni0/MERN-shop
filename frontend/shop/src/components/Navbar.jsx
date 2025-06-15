@@ -10,7 +10,7 @@ import { BsBasket, BsHeart, BsCreditCard } from "react-icons/bs";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserLoginContext } from "../App.jsx";
-import {API_URL} from '../settings'
+import { API_URL } from "../settings";
 
 function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -18,6 +18,7 @@ function Navbar() {
   const { theme } = useContext(ThemeContext);
   const { isBasket, setIsBasket } = useContext(BasketContext); // Use BasketContext
   const [num, setNum] = useState(0);
+  const [favourites, setFavourites] = useState([]);
   const navigate = useNavigate();
 
   const handleBasket = (e) => {
@@ -37,6 +38,11 @@ function Navbar() {
     navigate("/payment");
   };
 
+  const handleFavourites = (e) => {
+    e.preventDefault();
+    navigate("/favourites");
+  };
+
   useEffect(() => {
     if (isBasket) {
       setNum((prevNum) => prevNum + 1);
@@ -51,7 +57,7 @@ function Navbar() {
         .get(`${API_URL}/basketItems`)
         .then((result) => {
           console.log(result.data[0]);
-          setNum(result.data[0].num);
+          setNum(result.data.length);
         })
         .catch((err) => {
           console.log("Error:", err);
@@ -111,13 +117,23 @@ function Navbar() {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              onClick={handleFavourites}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee "
+              className="-mx-3 relative block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee "
             >
               <div className="flex flex-row items-center">
-                <span className="pr-4">Favourities </span>
-                <BsHeart className="text-xl " />
+                <span className="pr-4">Favourites </span>
+                <BsHeart className="text-xl text-red-500" />
+                {favourites.length > 0 && (
+                  <p className="pl-2">({favourites.length})</p>
+                )}
               </div>
+              {favourites.length > 0 && (
+                <span className="absolute top-0 right-0 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+              )}
             </motion.button>
           </div>
           <div className="hidden lg:flex  lg:justify-end pr-8 ">
@@ -185,13 +201,23 @@ function Navbar() {
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
+                    onClick={handleFavourites}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    className="block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee "
+                    className="-mx-3 relative block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee "
                   >
                     <div className="flex flex-row items-center">
-                      <span className="pr-4">Favourities </span>
-                      <BsHeart className="text-xl " />
+                      <span className="pr-4">Favourites </span>
+                      <BsHeart className="text-xl text-red-500" />
+                      {favourites.length > 0 && (
+                        <p className="pl-2">({favourites.length})</p>
+                      )}
                     </div>
+                    {favourites.length > 0 && (
+                      <span className="absolute top-0 right-0 flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                      </span>
+                    )}
                   </motion.button>
 
                   <motion.button

@@ -4,7 +4,7 @@ import { BasketContext } from "../App.jsx"; // Import BasketContext
 import axios from "axios";
 import { StarIcon } from "@heroicons/react/24/outline";
 import { Radio, RadioGroup } from "@headlessui/react";
-import {API_URL} from '../settings'
+import { API_URL } from "../settings";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
@@ -32,47 +32,52 @@ const sizes = [
   { name: "xxl", inStock: true },
   { name: "xxxl", inStock: true },
 ];
+
 function ItemPage() {
   const { theme } = useContext(ThemeContext);
-  const { setIsBasket } = useContext(BasketContext); // Use BasketContext
-  const [products, setProducts] = useState([]);
-  const [selectedColor, setSelectedColor] = useState();
-  const [selectedSize, setSelectedSize] = useState();
-  axios.defaults.withCredentials = true;
+  const { setIsBasket } = useContext(BasketContext);
+  const [products, setProducts] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
 
   useEffect(() => {
     const number = window.location.pathname.split("/")[2];
     axios
       .get(`${API_URL}/products/${number}`)
       .then((result) => {
-        console.log(result.data[0]);
-        setProducts(result.data[0]);
-        console.log(products);
+        setProducts(result.data); // lub result.data[0] jeśli backend zwraca tablicę
       })
       .catch((err) => {
         console.log("Error:", err);
       });
   }, []);
 
+  if (!products || !products.imgAlt) {
+    return <div className="text-center text-gray-500">Loading...</div>;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const number = window.location.pathname.split("/")[2];
-    if (selectedColor === undefined || selectedSize === undefined) {
-      alert("Please select a color and a size");
+
+    if (!selectedColor || !selectedSize) {
+      alert("Please select a color and size.");
       return;
     }
+
+    const number = window.location.pathname.split("/")[2];
+
     axios
       .post(`${API_URL}/products/${number}/basket`, {
-        selectedColor,
-        selectedSize,
+        color: selectedColor.name, // ⬅️ uwaga: przekazujemy .name, nie obiekt
+        size: selectedSize.name,
       })
-      .then((result) => {
-        console.log(result.data[0]);
-        setIsBasket(true); // Update BasketContext
-        console.log(products);
+      .then((res) => {
+        console.log("Added to basket:", res.data);
+        setIsBasket(true); // aktualizuj kontekst koszyka
       })
       .catch((err) => {
-        console.log("Error:", err);
+        console.error("Error adding to basket:", err);
+        alert("Adding to basket failed.");
       });
   };
 
@@ -88,8 +93,8 @@ function ItemPage() {
         <div className="inline-block lg:flex lg:flex-1 lg:flex-row ">
           <div className="">
             <img
-              alt={products.img_alt}
-              src={products.img_src}
+              alt={products.imgAlt}
+              src={products.imgSrc}
               className="aspect-square max-w-screen-md rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
             />
           </div>

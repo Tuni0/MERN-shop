@@ -12,18 +12,23 @@ import Contact from "./components/Contact.jsx";
 import ItemPage from "./components/ItemPage.jsx";
 import Basket from "./components/Basket.jsx";
 import SwaggerDocs from "./components/SwaggerDocs.jsx";
-import Payment from './components/Payment.jsx'
-import {API_URL} from './settings'
+import Payment from "./components/Payment.jsx";
+import { API_URL } from "./settings";
+import PaymentCancel from "./components/PaymentCancel.jsx";
+import Favourites from "./components/Favourites.jsx";
 
 export const ThemeContext = createContext();
-export const UserLoginContext = createContext();
+export const UserLoginContext = createContext({
+  user: null,
+  setUser: () => {},
+});
 export const BasketContext = createContext();
 
 axios.defaults.withCredentials = true;
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
   const [isBasket, setIsBasket] = useState(false);
   const navigate = useNavigate(); // Move useNavigate inside the App component
 
@@ -37,27 +42,36 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
+    axios;
     axios
-      .get(`${API_URL}/`)
+      .get(`${API_URL}/session`, { withCredentials: true })
+
       .then((res) => {
-        if (res.data.validUser) {
-          setUser(res.data.username);
+        if (res.data.validUser && res.data.userId) {
+          setUser({
+            id: res.data.userId,
+            email: res.data.email, // jeśli backend to zwraca
+          });
+
           if (
             window.location.pathname === "/signin" ||
-            window.location.pathnasme === "/signup"
+            window.location.pathname === "/signup"
           ) {
             navigate("/");
           }
+        } else {
+          setUser(null); // brak sesji
         }
       })
       .catch((err) => {
         console.log(err);
+        setUser(null);
       });
   }, [navigate]);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <UserLoginContext.Provider value={{ user }}>
+      <UserLoginContext.Provider value={{ user, setUser }}>
         <BasketContext.Provider value={{ isBasket, setIsBasket }}>
           <div className="w-full mx-0 px-0">
             <Routes>
@@ -128,8 +142,18 @@ function App() {
                   </>
                 }
               />
+              <Route path="/payment-cancel" element={<PaymentCancel />} />
+              <Route
+                path="/favourites"
+                element={
+                  <>
+                    <Navbar />
+                    <Favourites />
+                  </>
+                }
+              />
             </Routes>
-          {/*  <SwaggerDocs /> */}
+            {/*  <SwaggerDocs /> */}
           </div>
         </BasketContext.Provider>
       </UserLoginContext.Provider>
