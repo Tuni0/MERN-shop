@@ -8,17 +8,19 @@ function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
+  const [surname, setSurname] = useState("surname");
+  const [isAdmin, setIsAdmin] = useState(false);
   axios.defaults.withCredentials = true;
 
   const handleSumbit = (e) => {
     e.preventDefault();
     axios
-      .post(`${API_URL}/register`, {
+      .post(`${API_URL}/signup`, {
         name: userName,
         email: email,
         password: password,
-        surname: "surname",
-        isAdmin: false,
+        surname: surname,
+        isAdmin: isAdmin,
       })
       .then((result) => {
         console.log(result.data);
@@ -65,7 +67,7 @@ function SignUpForm() {
             src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
             className="mx-auto h-10 w-auto"
           />
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">
             Create your account
           </h2>
         </div>
@@ -75,7 +77,7 @@ function SignUpForm() {
             <div>
               <label
                 htmlFor="email"
-                className="flex text-sm/6 font-medium text-gray-900 justify-start"
+                className="flex text-sm/6 font-medium text-gray-900 dark:text-white justify-start"
               >
                 User Name
               </label>
@@ -87,7 +89,7 @@ function SignUpForm() {
                   required
                   autoComplete="user-name"
                   onChange={(e) => setUserName(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:bg-neutral-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 />
               </div>
             </div>
@@ -95,7 +97,7 @@ function SignUpForm() {
             <div>
               <label
                 htmlFor="email"
-                className="flex text-sm/6 font-medium text-gray-900 justify-start"
+                className="flex text-sm/6 font-medium text-gray-900 dark:text-white justify-start"
               >
                 Email address
               </label>
@@ -107,7 +109,7 @@ function SignUpForm() {
                   required
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:bg-neutral-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 />
               </div>
             </div>
@@ -116,7 +118,7 @@ function SignUpForm() {
               <div className="flex justify-start">
                 <label
                   htmlFor="password"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
                 >
                   Password
                 </label>
@@ -129,7 +131,7 @@ function SignUpForm() {
                   required
                   autoComplete="current-password"
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:bg-neutral-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 />
               </div>
             </div>

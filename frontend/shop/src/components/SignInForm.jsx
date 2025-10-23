@@ -29,8 +29,8 @@ function SignInForm() {
         console.log(result.data);
         if (result.data === "Incorrect password") {
           alert("Incorrect password or email");
-        } else if (result.data.login === true) {
-          localStorage.setItem("user", JSON.stringify(result.data)); // zapisanie sesji
+        } else if (result.data.Login === true) {
+          localStorage.setItem("user", JSON.stringify(result.data.username));
           window.location.pathname = "/";
         } else {
           alert("Login failed! Please contact support.");
@@ -50,7 +50,7 @@ function SignInForm() {
             src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
             className="mx-auto h-10 w-auto"
           />
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">
             Sign in to your account
           </h2>
         </div>
@@ -60,7 +60,7 @@ function SignInForm() {
             <div>
               <label
                 htmlFor="email"
-                className="text-sm/6 font-medium text-gray-900 flex justify-start"
+                className="text-sm/6 font-medium text-gray-900 dark:text-white flex justify-start"
               >
                 Email address
               </label>
@@ -72,7 +72,7 @@ function SignInForm() {
                   required
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:bg-neutral-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 />
               </div>
             </div>
@@ -81,14 +81,14 @@ function SignInForm() {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm/6 font-medium text-gray-900"
+                  className="block text-sm/6 font-medium text-gray-900 dark:text-white"
                 >
                   Password
                 </label>
                 <div className="text-sm">
                   <a
                     href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+                    className="font-semibold text-indigo-600 hover:text-indigo-500 "
                   >
                     Forgot password?
                   </a>
@@ -102,7 +102,7 @@ function SignInForm() {
                   required
                   autoComplete="current-password"
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:bg-neutral-800 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                 />
               </div>
             </div>

@@ -3,8 +3,10 @@ import axios from "axios";
 import { UserLoginContext } from "../App";
 import { API_URL, STRIPE_PUBLIC_KEY } from "../settings";
 import { loadStripe } from "@stripe/stripe-js";
+import { useTheme } from ".././ThemeContext.jsx";
 
 function Basket() {
+  const { theme } = useTheme();
   const [items, setItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const { user } = useContext(UserLoginContext);
@@ -27,7 +29,7 @@ function Basket() {
   }, []);
 
   const calculateSubtotal = (items) => {
-    if (!user) return;
+    if (!user || !Array.isArray(items)) return;
     const subtotal = items.reduce(
       (total, item) =>
         total + (item.product?.price ?? 0) * (item.quantity ?? 1),
@@ -58,16 +60,16 @@ function Basket() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen flex flex-col items-center">
+    <div className="bg-gray-50 dark:bg-neutral-900 min-h-screen flex flex-col items-center">
       <div className="w-full max-w-5xl mx-auto p-6">
         <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-8 bg-white p-6 rounded-lg shadow">
+          <div className="lg:col-span-8 bg-white dark:bg-neutral-800 p-6 rounded-lg shadow">
             {!user && <p>Please log in and add items to basket to see</p>}
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between border-b border-gray-200 pb-4 mb-4"
+                className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4 mb-4"
               >
                 <div className="flex items-center">
                   <img
@@ -77,10 +79,10 @@ function Basket() {
                   />
                   <div className="ml-4">
                     <h2 className="font-medium">{item.product?.description}</h2>
-                    <p className="text-sm text-gray-500 text-left">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-left">
                       {item.color}
                     </p>
-                    <p className="text-sm text-gray-500 text-left">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-left">
                       {item.size}
                     </p>
                     <p className="text-sm mt-1 text-green-500">In stock</p>
@@ -89,7 +91,7 @@ function Basket() {
                 <div className="flex items-center">
                   <p className="font-medium mr-4">${item.quantity}</p>
                   <select
-                    className="border-gray-300 rounded p-1"
+                    className="border-gray-300 dark:border-gray-700 dark:bg-neutral-900 rounded p-1"
                     value={item.quantity ?? 1}
                     onChange={(e) => handleOnChange(e, item.id)}
                   >
@@ -110,7 +112,7 @@ function Basket() {
             ))}
           </div>
 
-          <div className="lg:col-span-4 bg-white p-6 rounded-lg shadow h-fit">
+          <div className="lg:col-span-4 bg-white dark:bg-neutral-800 p-6 rounded-lg shadow h-fit">
             <h2 className="text-lg font-medium mb-4">Order Summary</h2>
             {user ? (
               <>

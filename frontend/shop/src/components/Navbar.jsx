@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import ThemeSwitcher from "./ThemeSwitcher.jsx";
-import { ThemeContext } from "../App.jsx";
+import { useTheme } from ".././ThemeContext.jsx";
 import { BasketContext } from "../App.jsx"; // Import BasketContext
 import { motion } from "framer-motion";
 import Login from "./Login.jsx";
@@ -15,7 +15,7 @@ import { API_URL } from "../settings";
 function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useContext(UserLoginContext); // Ensure setUser is defined
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useTheme();
   const { isBasket, setIsBasket } = useContext(BasketContext); // Use BasketContext
   const [num, setNum] = useState(0);
   const [favourites, setFavourites] = useState([]);
@@ -66,12 +66,7 @@ function Navbar() {
   }, [user]);
 
   return (
-    <div
-      id="home"
-      className={`sticky top-4 z-10 ${
-        theme === "dark" ? "dark" : ""
-      }  bg-gray-100/70 dark:bg-neutral-800/70 backdrop-blur-sm rounded-3xl `}
-    >
+    <div className="sticky top-4 z-10 bg-gray-100/70 dark:bg-neutral-800/70 backdrop-blur-sm rounded-3xl">
       <header className="header">
         <nav
           aria-label="Global"

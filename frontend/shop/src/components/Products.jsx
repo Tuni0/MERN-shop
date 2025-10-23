@@ -1,5 +1,6 @@
 import React, { useMemo, useEffect, useState, useContext } from "react";
-import { ThemeContext, UserLoginContext, BasketContext } from "../App.jsx";
+import { useTheme } from ".././ThemeContext.jsx";
+import { UserLoginContext, BasketContext } from "../App.jsx";
 import axios from "axios";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { BsBasket2 } from "react-icons/bs";
@@ -29,7 +30,7 @@ const sizes = [
 ];
 
 const Products = () => {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useTheme();
   const [products, setProducts] = useState([]);
   const { user } = useContext(UserLoginContext);
   const { setIsBasket } = useContext(BasketContext); // Use BasketContext
@@ -44,7 +45,7 @@ const Products = () => {
 
     const fetchProducts = async () => {
       try {
-        const result = await axios.get("https://localhost:8443/products");
+        const result = await axios.get(`${API_URL}/products`);
         console.log("Fetched products:", result.data); // 👈 dodaj to
 
         if (isMounted) {
@@ -243,7 +244,7 @@ const Products = () => {
                   </Link>
 
                   <button
-                    className="absolute z-20 top-2 right-16 flex items-center justify-center bg-white rounded-full p-1 shadow-md hover:bg-gray-200"
+                    className="absolute z-20 top-2 right-16 flex items-center justify-center bg-white dark:bg-neutral-800 rounded-full p-1 shadow-md hover:bg-gray-200 dark:hover:bg-neutral-700 "
                     onClick={() => handleHeartClick(product.id)}
                     onMouseEnter={(e) =>
                       e.currentTarget.parentElement.classList.remove(
@@ -257,12 +258,12 @@ const Products = () => {
                     }
                   >
                     <HeartIcon
-                      className="h-6 w-6 text-gray-900"
+                      className="h-6 w-6 text-gray-900 dark:text-white"
                       aria-hidden="true"
                     />
                   </button>
                   <button
-                    className="absolute z-20 top-2 right-2 flex items-center justify-center bg-white rounded-full p-1 shadow-md hover:bg-gray-200"
+                    className="absolute z-20 top-2 right-2 flex items-center justify-center bg-white dark:bg-neutral-800 rounded-full p-1 shadow-md hover:bg-gray-200 dark:hover:bg-neutral-700"
                     onClick={(e) => handleBasketClick(e, product.id)}
                     onMouseEnter={(e) =>
                       e.currentTarget.parentElement.classList.remove(
@@ -276,17 +277,19 @@ const Products = () => {
                     }
                   >
                     <BsBasket2
-                      className="h-6 w-6 text-gray-900"
+                      className="h-6 w-6 text-gray-900 dark:text-white"
                       aria-hidden="true"
                     />
                   </button>
                 </div>
                 <a href={`products/${product.idproducts}`}>
-                  <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
-                  <p className="mt-1 text-lg text-gray-900 text-left">
+                  <h3 className="mt-4 text-sm text-gray-700 dark:text-gray-300">
+                    {product.name}
+                  </h3>
+                  <p className="mt-1 text-lg text-gray-900 dark:text-white text-left">
                     {product.description}
                   </p>
-                  <p className="mt-1 text-lg font-medium text-gray-900 text-left">
+                  <p className="mt-1 text-lg font-medium text-gray-900 dark:text-white text-left">
                     {product.price} $
                   </p>
                 </a>

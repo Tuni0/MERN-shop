@@ -2,12 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-body.light {
+:root.light {
   background-color: #ffffff;
+  color: #000000;
 }
 
-body.dark {
+:root.dark {
   background-color: #171717;
+  color: #ffffff;
 }
 
 @font-face {

@@ -16,8 +16,8 @@ import Payment from "./components/Payment.jsx";
 import { API_URL } from "./settings";
 import PaymentCancel from "./components/PaymentCancel.jsx";
 import Favourites from "./components/Favourites.jsx";
+import { ThemeProvider } from "./ThemeContext"; // corrected import path
 
-export const ThemeContext = createContext();
 export const UserLoginContext = createContext({
   user: null,
   setUser: () => {},
@@ -42,35 +42,29 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
-    axios;
-    axios
-      .get(`${API_URL}/session`, { withCredentials: true })
+    const checkSession = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/auth/verify`, {
+          withCredentials: true,
+        });
 
-      .then((res) => {
-        if (res.data.validUser && res.data.userId) {
-          setUser({
-            id: res.data.userId,
-            email: res.data.email, // jeśli backend to zwraca
-          });
-
-          if (
-            window.location.pathname === "/signin" ||
-            window.location.pathname === "/signup"
-          ) {
-            navigate("/");
-          }
+        if (res.data.validUser) {
+          setUser(res.data.username);
+          console.log("✅ Sesja aktywna dla:", res.data.username);
         } else {
-          setUser(null); // brak sesji
+          setUser(null);
+          console.log("❌ Brak aktywnej sesji");
         }
-      })
-      .catch((err) => {
-        console.log(err);
-        setUser(null);
-      });
-  }, [navigate]);
+      } catch (err) {
+        console.error("Session check error:", err);
+      }
+    };
+
+    checkSession();
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeProvider>
       <UserLoginContext.Provider value={{ user, setUser }}>
         <BasketContext.Provider value={{ isBasket, setIsBasket }}>
           <div className="w-full mx-0 px-0">
@@ -157,7 +151,7 @@ function App() {
           </div>
         </BasketContext.Provider>
       </UserLoginContext.Provider>
-    </ThemeContext.Provider>
+    </ThemeProvider>
   );
 }
 
