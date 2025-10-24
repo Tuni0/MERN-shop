@@ -114,7 +114,7 @@ function Navbar() {
               whileTap={{ scale: 0.9 }}
               onClick={handleFavourites}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              className="-mx-3 relative block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee "
+              className="block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee "
             >
               <div className="flex flex-row items-center">
                 <span className="pr-4">Favourites </span>
@@ -198,7 +198,7 @@ function Navbar() {
                     whileTap={{ scale: 0.9 }}
                     onClick={handleFavourites}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    className="-mx-3 relative block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee "
+                    className="block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-200 dark:text-white dark:hover:bg-zinc-800 font-abeezee "
                   >
                     <div className="flex flex-row items-center">
                       <span className="pr-4">Favourites </span>

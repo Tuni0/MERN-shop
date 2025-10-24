@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import SignInForm from "./components/SignInForm.jsx";
 import SignUpForm from "./components/SignUpForm.jsx";
@@ -11,7 +11,6 @@ import Products from "./components/Products.jsx";
 import Contact from "./components/Contact.jsx";
 import ItemPage from "./components/ItemPage.jsx";
 import Basket from "./components/Basket.jsx";
-import SwaggerDocs from "./components/SwaggerDocs.jsx";
 import Payment from "./components/Payment.jsx";
 import { API_URL } from "./settings";
 import PaymentCancel from "./components/PaymentCancel.jsx";
@@ -27,19 +26,8 @@ export const BasketContext = createContext();
 axios.defaults.withCredentials = true;
 
 function App() {
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [user, setUser] = useState(null);
   const [isBasket, setIsBasket] = useState(false);
-  const navigate = useNavigate(); // Move useNavigate inside the App component
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
-
-  useEffect(() => {
-    document.body.className = theme; // Apply theme to the body
-    localStorage.setItem("theme", theme);
-  }, [theme]);
 
   useEffect(() => {
     const checkSession = async () => {

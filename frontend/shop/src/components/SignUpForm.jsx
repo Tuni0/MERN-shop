@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { API_URL } from "../settings";
 
@@ -11,6 +12,8 @@ function SignUpForm() {
   const [surname, setSurname] = useState("surname");
   const [isAdmin, setIsAdmin] = useState(false);
   axios.defaults.withCredentials = true;
+
+  const navigate = useNavigate();
 
   const handleSumbit = (e) => {
     e.preventDefault();
@@ -28,6 +31,7 @@ function SignUpForm() {
         if (result.status === 201) {
           console.log("Signup Success");
           alert("Signup successful!");
+          navigate("/signin");
         } else {
           alert("Signup failed! Please try again.");
         }

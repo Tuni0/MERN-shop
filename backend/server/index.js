@@ -1,5 +1,4 @@
 import express from "express";
-import { createConnection } from "mysql";
 import cors from "cors";
 import bcrypt from "bcrypt";
 import session from "express-session";
@@ -7,7 +6,7 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import pkg from "pg";
 const { Pool } = pkg;
-import { Connector } from "@google-cloud/cloud-sql-connector";
+import "dotenv/config";
 
 const app = express();
 app.use(
@@ -36,11 +35,8 @@ app.use(
 app.use(bodyParser.json());
 
 const pool = new Pool({
-  host: "localhost", // adres serwera
-  user: "postgres", // nazwa użytkownika (domyślnie postgres)
-  password: "admin", // hasło użytkownika
-  database: "sklep", // nazwa Twojej bazy danych
-  port: 5432, // domyślny port PostgreSQL
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
 });
 
 // Sprawdzenie połączenia:
@@ -110,7 +106,7 @@ app.post("/signup", async (req, res) => {
       [name, surname, email, hashedPassword, isAdmin ?? false]
     );
 
-    res.send("User registered successfully");
+    res.status(201).send("User registered successfully");
   } catch (err) {
     console.error("Signup error:", err);
     res.status(500).send("Error inserting values");

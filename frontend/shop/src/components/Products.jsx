@@ -244,7 +244,7 @@ const Products = () => {
                   </Link>
 
                   <button
-                    className="absolute z-20 top-2 right-16 flex items-center justify-center bg-white dark:bg-neutral-800 rounded-full p-1 shadow-md hover:bg-gray-200 dark:hover:bg-neutral-700 "
+                    className="absolute z-1 top-2 right-16 flex items-center justify-center bg-white dark:bg-neutral-800 rounded-full p-1 shadow-md hover:bg-gray-200 dark:hover:bg-neutral-700 "
                     onClick={() => handleHeartClick(product.id)}
                     onMouseEnter={(e) =>
                       e.currentTarget.parentElement.classList.remove(
@@ -263,7 +263,7 @@ const Products = () => {
                     />
                   </button>
                   <button
-                    className="absolute z-20 top-2 right-2 flex items-center justify-center bg-white dark:bg-neutral-800 rounded-full p-1 shadow-md hover:bg-gray-200 dark:hover:bg-neutral-700"
+                    className="absolute z-1 top-2 right-2 flex items-center justify-center bg-white dark:bg-neutral-800 rounded-full p-1 shadow-md hover:bg-gray-200 dark:hover:bg-neutral-700"
                     onClick={(e) => handleBasketClick(e, product.id)}
                     onMouseEnter={(e) =>
                       e.currentTarget.parentElement.classList.remove(
